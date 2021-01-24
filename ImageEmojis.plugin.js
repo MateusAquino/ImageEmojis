@@ -4,8 +4,8 @@ var ImageEmojis = (() => {
     class Plugin {
         getName() {return "ImageEmojis"}
         getShortName() {return "ie"}
-        getDescription() {return "Unlock every single Discord emoji as images/gifs (Nitro Alternative). Just Right-Click it."}
-        getVersion() {return "0.1.0"}
+        getDescription() {return "Unlock every single Discord emoji as images/gifs. Just Right-Click it."}
+        getVersion() {return "0.1.1"}
         getAuthor() {return "Mafios"}
         load() {
             if (window.ZLibrary)
@@ -16,7 +16,6 @@ var ImageEmojis = (() => {
                 );
         }
         start() {
-            this.onStack = false;
             this.style = document.createElement('style');
             this.style.innerHTML = `li[class^='emojiItem'], li[class*=' emojiItem'] { filter: none; -webkit-filter: none; } #ie-svg { -webkit-transition: all 0.1s ease-in-out;-moz-transition: all 0.1s ease-in-out;-ms-transition: all 0.1s ease-in-out;-o-transition: all 0.1s ease-in-out; }`;
             document.head.appendChild(this.style);
@@ -26,16 +25,13 @@ var ImageEmojis = (() => {
                 this.style.remove();
         }
         observer(o) {
-            if (o.target.textContent && this.context(o.target.textContent, ['Utilizados com frequência', 'Frequently Used', 'Favorites', 'Favoritos', 'Pinned', 'People', 'Pessoas']))
+            if (o.target.id === "emoji-picker-grid")
                 o.target.addEventListener('contextmenu', e => {
-                    
                     // Get URL of Selected Emoji
                     e = e || window.event;
                     e = e.target || e.srcElement;
                     let url = e.children[0].src;
-                    if (!url || this.onStack) return;
-                    this.onStack = true;
-                    setTimeout(() => this.onStack=false, 150);
+                    if (!url) return;
                     let size = BdApi.loadData('ImageEmojis', 'fixedSize') | 0;
                     if (size) url+=`&size=${size}`;
                     
