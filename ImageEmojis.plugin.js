@@ -5,7 +5,7 @@ var ImageEmojis = (() => {
         getName() {return "ImageEmojis"}
         getShortName() {return "ie"}
         getDescription() {return "Unlock every single Discord emoji as images/gifs. Just Right-Click it."}
-        getVersion() {return "0.1.2"}
+        getVersion() {return "0.1.3"}
         getAuthor() {return "Mafios"}
         load() {
             if (window.ZLibrary)
@@ -106,8 +106,9 @@ var ImageEmojis = (() => {
                     let x = e.pageX - b.left + .5
                     let w = b.width | 1;
                     let selected = Math.round(x/w*9);
+                    let values = [16, 32, 40, 64, 128, 256, 512, 1024, 2048, 4096];
                     if (last !== selected)
-                        this.setFixedSize(Math.pow(2, 4 + (last = selected)));
+                        this.setFixedSize(values[(last = selected)]);
                 }
             });
         }
