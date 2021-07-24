@@ -1,6 +1,6 @@
 /**
  * @name ImageEmojis
- * @version 0.1.4
+ * @version 0.1.5
  * @source https://raw.githubusercontent.com/MateusAquino/ImageEmojis/master/ImageEmojis.plugin.js
  * @updateUrl https://raw.githubusercontent.com/MateusAquino/ImageEmojis/master/ImageEmojis.plugin.js
  */
@@ -9,7 +9,7 @@ module.exports = class ImageEmojis {
     getName() {return "ImageEmojis"}
     getShortName() {return "ie"}
     getDescription() {return "Unlock every single Discord emoji as images/gifs. Just Right-Click it."}
-    getVersion() {return "0.1.4"}
+    getVersion() {return "0.1.5"}
     getAuthor() {return "Mafios"}
     load() {
         if (window.ZLibrary)
@@ -39,10 +39,9 @@ module.exports = class ImageEmojis {
                 if (!url) return;
                 let size = BdApi.loadData('ImageEmojis', 'fixedSize') | 0;
                 if (size) url+=`&size=${size}`;
-                
                 // Insert url on chat
                 let chatInput = this.select('slateTextArea');
-                let editor = chatInput.__reactInternalInstance$.child.memoizedProps.editor;
+                let editor = chatInput[Object.keys(chatInput)[0]].memoizedProps.children.props.editor;
                 editor.insertText(url);
                 
                 // Close Emoji Container
