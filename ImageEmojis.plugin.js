@@ -1,6 +1,6 @@
 /**
  * @name ImageEmojis
- * @version 0.2.1
+ * @version 0.2.3
  * @source https://raw.githubusercontent.com/MateusAquino/ImageEmojis/master/ImageEmojis.plugin.js
  * @updateUrl https://raw.githubusercontent.com/MateusAquino/ImageEmojis/master/ImageEmojis.plugin.js
  */
@@ -9,7 +9,7 @@ module.exports = class ImageEmojis {
     getName() {return "ImageEmojis"}
     getShortName() {return "ie"}
     getDescription() {return "Unlock every single Discord emoji or sticker as images/gifs. Just Right-Click it."}
-    getVersion() {return "0.2.1"}
+    getVersion() {return "0.2.3"}
     getAuthor() {return "Mafios"}
     load() {
         if (window.ZLibrary)
@@ -22,7 +22,7 @@ module.exports = class ImageEmojis {
     start() {
         // Global Styling (Removes grayscale filter from emojis + animations for plugin settings)
         this.style = document.createElement('style');
-        this.style.innerHTML = `li[class^='emojiItem'], li[class*=' emojiItem'], div[class^='stickerNode'], div[class*='stickerNode'] { filter: none; -webkit-filter: none; } #ie-svg { -webkit-transition: all 0.1s ease-in-out;-moz-transition: all 0.1s ease-in-out;-ms-transition: all 0.1s ease-in-out;-o-transition: all 0.1s ease-in-out; };`;
+        this.style.innerHTML = `button[class^='emojiItem'], button[class*=' emojiItem'], div[class^='stickerNode'], div[class*='stickerNode'] { filter: none; -webkit-filter: none; } #ie-svg { -webkit-transition: all 0.1s ease-in-out;-moz-transition: all 0.1s ease-in-out;-ms-transition: all 0.1s ease-in-out;-o-transition: all 0.1s ease-in-out; };`;
         document.head.appendChild(this.style);
     }
     stop() {
@@ -39,7 +39,7 @@ module.exports = class ImageEmojis {
                 let url = isSticker ? e.src : e.children[0].src;
                 if (!url) return;
                 let size = BdApi.loadData('ImageEmojis', 'fixedSize') | 0;
-                if (size && !isSticker) url=url.split('?size=32')[0] + `?size=${size}`;
+                if (size && !isSticker) url=url.split('?')[0] + `?size=${size}`;
                 // Insert url on chat
                 let chatInput = this.select('slateTextArea');
                 let editor = chatInput[Object.keys(chatInput)[0]].memoizedProps.children.props.editor;
@@ -106,9 +106,10 @@ module.exports = class ImageEmojis {
         node.parentElement.addEventListener('mousedown', () => dragging = true);
         node.parentElement.addEventListener('mouseup', () => dragging = false);
         node.parentElement.addEventListener('mousemove', e => {
-            if (dragging) {
-                let x = e.pageX - b.left + .5
-                let w = b.width | 1;
+            const isTracker = e.srcElement.classList[0].includes("track")
+            if (dragging && isTracker) {
+                let x = e.layerX;
+                let w = 517;
                 let selected = Math.round(x/w*9);
                 let values = [16, 32, 40, 64, 128, 256, 512, 1024, 2048, 4096];
                 if (last !== selected)
